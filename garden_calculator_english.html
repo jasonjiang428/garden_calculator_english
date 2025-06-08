@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garden Value Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 50%, #6b8e23 100%);
+            min-height: 100vh;
+            color: #2d4a2d;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #2d5a27;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #6b8e23;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .calculator-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(107, 142, 35, 0.3);
+        }
+
+        .section-title {
+            color: #2d5a27;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            background: linear-gradient(45deg, #6b8e23, #8fbc8f);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d5a27;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #8fbc8f;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input:focus, select:focus {
+            border-color: #6b8e23;
+            outline: none;
+            box-shadow: 0 0 10px rgba(107, 142, 35, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .mutation-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .mutation-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: rgba(143, 188, 143, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mutation-item:hover {
+            background: rgba(143, 188, 143, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .mutation-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .mutation-multiplier {
+            color: #d4a574;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(45deg, #6b8e23, #8fbc8f);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(45deg, #5a7320, #7aa87a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 142, 35, 0.4);
+        }
+
+        .results {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(107, 142, 35, 0.3);
+        }
+
+        .result-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f0f8e8, #e8f5e8);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid rgba(107, 142, 35, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(107, 142, 35, 0.2);
+        }
+
+        .result-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2d5a27;
+            margin-bottom: 5px;
+        }
+
+        .result-label {
+            color: #6b8e23;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .trade-analyzer {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .trade-side {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(107, 142, 35, 0.3);
+        }
+
+        .trade-result {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .win { background: linear-gradient(135deg, #90EE90, #98FB98); color: #2d5a27; }
+        .fair { background: linear-gradient(135deg, #FFE4B5, #F0E68C); color: #8B4513; }
+        .loss { background: linear-gradient(135deg, #FFB6C1, #FFA07A); color: #8B0000; }
+
+        @media (max-width: 768px) {
+            .main-content, .trade-analyzer {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .mutation-checkboxes {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-leaf {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-leaf" style="top: 10%; left: 10%; animation-delay: 0s;">🌱</div>
+        <div class="floating-leaf" style="top: 20%; right: 15%; animation-delay: 2s;">🍃</div>
+        <div class="floating-leaf" style="top: 60%; left: 5%; animation-delay: 4s;">🌿</div>
+        <div class="floating-leaf" style="bottom: 20%; right: 10%; animation-delay: 1s;">🌾</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>🌱 Garden Value Calculator</h1>
+            <p class="subtitle">Professional garden crop value calculation and trading analysis tool</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Crop Value Calculator -->
+            <div class="calculator-section">
+                <h2 class="section-title">
+                    <span class="section-icon">🥕</span>
+                    Crop Value Calculator
+                </h2>
+                
+                <div class="form-group">
+                    <label for="cropType">Crop Type</label>
+                    <select id="cropType">
+                        <option value="">Select crop...</option>
+                        <option value="apple" data-value="50">Apple (50 Coins)</option>
+                        <option value="grape" data-value="10000">Grape (10,000 Coins)</option>
+                        <option value="blueberry" data-value="25">Blueberry (25 Coins)</option>
+                        <option value="strawberry" data-value="15">Strawberry (15 Coins)</option>
+                        <option value="mango" data-value="5000">Mango (5,000 Coins)</option>
+                        <option value="orange" data-value="100">Orange (100 Coins)</option>
+                        <option value="pineapple" data-value="1000">Pineapple (1,000 Coins)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="baseValue">Base Value (Coins)</label>
+                    <input type="number" id="baseValue" placeholder="Enter crop base value">
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" value="1" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>Special Effects</label>
+                    <div class="mutation-checkboxes">
+                        <div class="mutation-item">
+                            <input type="checkbox" id="electrified" data-multiplier="100">
+                            <label for="electrified">Electrified <span class="mutation-multiplier">(100x)</span></label>
+                        </div>
+                        <div class="mutation-item">
+                            <input type="checkbox" id="celestial" data-multiplier="120">
+                            <label for="celestial">Celestial <span class="mutation-multiplier">(120x)</span></label>
+                        </div>
+                        <div class="mutation-item">
+                            <input type="checkbox" id="rainbow" data-multiplier="50">
+                            <label for="rainbow">Rainbow <span class="mutation-multiplier">(50x)</span></label>
+                        </div>
+                        <div class="mutation-item">
+                            <input type="checkbox" id="golden" data-multiplier="25">
+                            <label for="golden">Golden <span class="mutation-multiplier">(25x)</span></label>
+                        </div>
+                        <div class="mutation-item">
+                            <input type="checkbox" id="frozen" data-multiplier="10">
+                            <label for="frozen">Frozen <span class="mutation-multiplier">(10x)</span></label>
+                        </div>
+                        <div class="mutation-item">
+                            <input type="checkbox" id="wet" data-multiplier="5">
+                            <label for="wet">Wet <span class="mutation-multiplier">(5x)</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateCropValue()">💰 Calculate Crop Value</button>
+            </div>
+
+            <!-- Equipment Analyzer -->
+            <div class="calculator-section">
+                <h2 class="section-title">
+                    <span class="section-icon">⚡</span>
+                    Equipment Value Analysis
+                </h2>
+                
+                <div class="form-group">
+                    <label for="gearType">Equipment Type</label>
+                    <select id="gearType">
+                        <option value="">Select equipment...</option>
+                        <option value="basic_sprinkler" data-value="1000">Basic Sprinkler (1,000 Coins)</option>
+                        <option value="advanced_sprinkler" data-value="15000">Advanced Sprinkler (15,000 Coins)</option>
+                        <option value="premium_sprinkler" data-value="500000">Premium Sprinkler (500,000 Coins)</option>
+                        <option value="fertilizer" data-value="500">Fertilizer (500 Coins)</option>
+                        <option value="super_fertilizer" data-value="5000">Super Fertilizer (5,000 Coins)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="gearQuantity">Equipment Quantity</label>
+                    <input type="number" id="gearQuantity" value="1" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="petType">Pet Type</label>
+                    <select id="petType">
+                        <option value="">Select pet...</option>
+                        <option value="dog" data-value="50000">Dog (50,000 Coins)</option>
+                        <option value="cat" data-value="75000">Cat (75,000 Coins)</option>
+                        <option value="dragon" data-value="10000000">Dragon (10,000,000 Coins)</option>
+                    </select>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateGearValue()">⚡ Calculate Equipment Value</button>
+            </div>
+
+            <!-- Results Display -->
+            <div class="results">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Calculation Results
+                </h2>
+                <div class="result-display" id="resultDisplay">
+                    <div class="result-card">
+                        <div class="result-value" id="totalValue">0</div>
+                        <div class="result-label">Total Value (Coins)</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-value" id="mutationMultiplier">1x</div>
+                        <div class="result-label">Effect Multiplier</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-value" id="profitEstimate">0</div>
+                        <div class="result-label">Estimated Profit</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade Analyzer -->
+            <div class="trade-analyzer">
+                <div class="trade-side">
+                    <h3 class="section-title">
+                        <span class="section-icon">📤</span>
+                        Your Items
+                    </h3>
+                    <div class="form-group">
+                        <label for="yourItems">Item Value (Coins)</label>
+                        <input type="number" id="yourItems" placeholder="Enter your total item value">
+                    </div>
+                    <div class="form-group">
+                        <label for="yourItemsDesc">Item Description</label>
+                        <input type="text" id="yourItemsDesc" placeholder="e.g: Electrified Apple x5">
+                    </div>
+                </div>
+
+                <div class="trade-side">
+                    <h3 class="section-title">
+                        <span class="section-icon">📥</span>
+                        Their Items
+                    </h3>
+                    <div class="form-group">
+                        <label for="theirItems">Item Value (Coins)</label>
+                        <input type="number" id="theirItems" placeholder="Enter their total item value">
+                    </div>
+                    <div class="form-group">
+                        <label for="theirItemsDesc">Item Description</label>
+                        <input type="text" id="theirItemsDesc" placeholder="e.g: Premium Sprinkler x1">
+                    </div>
+                </div>
+
+                <div style="grid-column: 1 / -1;">
+                    <button class="calculate-btn" onclick="analyzeTrade()">🔄 Analyze Trade</button>
+                    <div id="tradeResult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Crop value calculation
+        function calculateCropValue() {
+            const baseValue = parseFloat(document.getElementById('baseValue').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            
+            let totalMultiplier = 1;
+            const mutations = document.querySelectorAll('.mutation-item input[type="checkbox"]:checked');
+            
+            mutations.forEach(mutation => {
+                const multiplier = parseFloat(mutation.dataset.multiplier);
+                totalMultiplier *= multiplier;
+            });
+            
+            const totalValue = baseValue * quantity * totalMultiplier;
+            const profit = totalValue - (baseValue * quantity);
+            
+            updateResults(totalValue, totalMultiplier, profit);
+        }
+
+        // Equipment value calculation
+        function calculateGearValue() {
+            const gearSelect = document.getElementById('gearType');
+            const gearValue = parseFloat(gearSelect.selectedOptions[0]?.dataset?.value) || 0;
+            const gearQuantity = parseInt(document.getElementById('gearQuantity').value) || 1;
+            
+            const petSelect = document.getElementById('petType');
+            const petValue = parseFloat(petSelect.selectedOptions[0]?.dataset?.value) || 0;
+            
+            const totalValue = (gearValue * gearQuantity) + petValue;
+            
+            updateResults(totalValue, 1, 0);
+        }
+
+        // Update results display
+        function updateResults(totalValue, multiplier, profit) {
+            document.getElementById('totalValue').textContent = totalValue.toLocaleString();
+            document.getElementById('mutationMultiplier').textContent = multiplier.toFixed(1) + 'x';
+            document.getElementById('profitEstimate').textContent = profit.toLocaleString();
+        }
+
+        // Trade analysis
+        function analyzeTrade() {
+            const yourValue = parseFloat(document.getElementById('yourItems').value) || 0;
+            const theirValue = parseFloat(document.getElementById('theirItems').value) || 0;
+            
+            const difference = theirValue - yourValue;
+            const percentageDiff = yourValue > 0 ? (difference / yourValue) * 100 : 0;
+            
+            let resultClass, resultText;
+            
+            if (Math.abs(percentageDiff) <= 10) {
+                resultClass = 'fair';
+                resultText = `Fair Trade (Difference: ${difference.toLocaleString()} Coins)`;
+            } else if (percentageDiff > 10) {
+                resultClass = 'win';
+                resultText = `Good Trade! (+${difference.toLocaleString()} Coins, +${percentageDiff.toFixed(1)}%)`;
+            } else {
+                resultClass = 'loss';
+                resultText = `Unfavorable Trade (${difference.toLocaleString()} Coins, ${percentageDiff.toFixed(1)}%)`;
+            }
+            
+            document.getElementById('tradeResult').innerHTML = 
+                `<div class="trade-result ${resultClass}">${resultText}</div>`;
+        }
+
+        // Auto-fill crop selection
+        document.getElementById('cropType').addEventListener('change', function() {
+            const value = this.selectedOptions[0]?.dataset?.value;
+            if (value) {
+                document.getElementById('baseValue').value = value;
+            }
+        });
+
+        // Effect conflict checking (Rainbow and Golden are mutually exclusive, Wet/Frozen are mutually exclusive)
+        document.querySelectorAll('.mutation-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Rainbow and Golden are mutually exclusive
+                    if (this.id === 'rainbow') {
+                        document.getElementById('golden').checked = false;
+                    } else if (this.id === 'golden') {
+                        document.getElementById('rainbow').checked = false;
+                    }
+                    
+                    // Wet and Frozen are mutually exclusive
+                    if (this.id === 'wet') {
+                        document.getElementById('frozen').checked = false;
+                    } else if (this.id === 'frozen') {
+                        document.getElementById('wet').checked = false;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
